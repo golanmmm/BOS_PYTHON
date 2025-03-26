@@ -3,7 +3,8 @@ import numpy as np
 import time
 
 
-def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, alpha=0.5, target_width=1920, target_height=1080):
+def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, alpha=0.5, target_width=1920, target_height=1080,
+                  start_frame=0):
     """
     Synthetic Schlieren System using a webcam and OpenCV.
 
@@ -15,28 +16,29 @@ def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, alpha=0.5, t
         alpha (float): Blending factor for smoothing reference frame updates (0 to 1).
         target_width (int): Target screen width (default is 1920).
         target_height (int): Target screen height (default is 1080).
+        start_frame (int): Frame number to start processing from (default is 0).
     """
-    # Open the camera
-    #webcam = cv.VideoCapture('butterSolder.movfl_2.3333fh_2.6666.avi')  # Use a video file or change to webcam (0) for live feed
-    #webcam = cv.VideoCapture('breathing1.mp4')
-    webcam = cv.VideoCapture(0, cv.CAP_DSHOW)  # Use 0 for the default camera
+    # Open the video file or camera
+    webcam = cv.VideoCapture('temp_video.mp4')
 
-    # Check if the camera is opened successfully
+    # Check if the camera or video file is opened successfully
     if not webcam.isOpened():
         print(f"Error: Unable to open camera with channel {channel}.")
         return
     else:
         print("Camera initialized successfully.")
 
-    # Warm up the camera
-    print("Warming up the camera...")
+    # Set the starting frame position
+    if start_frame > 0:
+        webcam.set(cv.CAP_PROP_POS_FRAMES, start_frame)
+        print(f"Starting processing from frame {start_frame}.")
 
     # Set camera properties for the video resolution (optional if using a webcam)
     webcam.set(cv.CAP_PROP_FRAME_WIDTH, target_width)
     webcam.set(cv.CAP_PROP_FRAME_HEIGHT, target_height)
 
     # Initialize variables
-    frame_count = 0
+    frame_count = start_frame  # Start counting from the specified frame
     reference_frame_bw = None  # Placeholder for the reference frame
     new_reference_frame_bw = None  # Placeholder for the new reference frame
 
@@ -113,4 +115,6 @@ def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, alpha=0.5, t
 
 
 # Run the Schlieren System
-schlieren_cam(channel=0, gain=5, delay=1, update_interval=2, alpha=0.1, target_width=1920, target_height=1080)
+schlieren_cam(channel=0, gain=10, delay=10, update_interval=1, alpha=0.05, target_width=1920, target_height=1080,
+              start_frame=9000)
+

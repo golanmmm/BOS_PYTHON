@@ -25,11 +25,10 @@ def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, blend_factor
 
     # Warm up the camera
     print("Warming up the camera...")
-    #time.sleep(2)
+    time.sleep(0)
 
     # Set camera properties
-    webcam.set(cv.CAP_PROP_FRAME_WIDTH, 800)
-    webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 600)
+
 
     # Initialize variables
     frame_count = 0
@@ -87,6 +86,7 @@ def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, blend_factor
         # Key handling
         key = cv.waitKey(delay)
         if key == 27:  # ESC key to exit
+            
             break
         elif key == 13:  # Enter key to save the frame
             filename = f'schlieren_frame_{int(time.time())}.jpg'
@@ -98,4 +98,4 @@ def schlieren_cam(channel=0, gain=10, delay=100, update_interval=4, blend_factor
     cv.destroyAllWindows()
 
 # Run the Schlieren System
-schlieren_cam(channel=0, gain=5, delay=1, update_interval=2, blend_factor=0.1)
+schlieren_cam(channel=0, gain=5, delay=1, update_interval=5, blend_factor=0.5)
